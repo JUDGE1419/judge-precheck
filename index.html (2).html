@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JUDGE｜不動産・相続 事前気づきアンケート</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&family=Cormorant+Garamond:wght@500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#181B39;font-family:'Noto Sans JP',sans-serif;min-height:100vh}
+
+header{background:#181B39;padding:48px 24px 36px;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(201,168,76,.1) 0%,transparent 70%)}
+.h-label{font-size:11px;letter-spacing:4px;color:#C9A84C;margin-bottom:10px;opacity:.8}
+.h-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,4vw,28px);color:#f5f0e8;font-weight:500;margin-bottom:8px;line-height:1.4}
+.h-title span{color:#C9A84C}
+.h-line{width:40px;height:1px;background:#C9A84C;margin:12px auto;opacity:.5}
+.h-sub{font-size:12px;color:rgba(245,240,232,.5);line-height:1.9;max-width:480px;margin:0 auto}
+
+.intro-bar{background:rgba(201,168,76,.08);border-top:1px solid rgba(201,168,76,.2);border-bottom:1px solid rgba(201,168,76,.2);padding:14px 24px;text-align:center}
+.intro-text{font-size:12px;color:rgba(245,240,232,.6);line-height:1.8}
+.intro-text strong{color:#C9A84C}
+
+main{max-width:680px;margin:0 auto;padding:32px 16px 60px}
+
+.progress{background:rgba(255,255,255,.06);border-radius:20px;height:4px;margin-bottom:32px;overflow:hidden}
+.progress-bar{background:linear-gradient(90deg,#C9A84C,#E8D080);height:100%;border-radius:20px;transition:width .3s;width:0%}
+
+.q-block{display:none;animation:fadeIn .3s ease}
+.q-block.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.q-header{margin-bottom:20px}
+.q-num{font-size:10px;letter-spacing:3px;color:#C9A84C;margin-bottom:8px;font-weight:500}
+.q-text{font-size:clamp(16px,3vw,20px);font-weight:500;color:#f5f0e8;line-height:1.6}
+.q-sub{font-size:12px;color:rgba(245,240,232,.45);margin-top:6px;line-height:1.6}
+
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.opt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px}
+.opt:hover{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4)}
+.opt.selected{background:rgba(201,168,76,.12);border-color:#C9A84C}
+.opt-mark{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s}
+.opt.selected .opt-mark{background:#C9A84C;border-color:#C9A84C}
+.opt.selected .opt-mark::after{content:'✓';font-size:10px;color:#181B39;font-weight:700}
+.opt-text{font-size:13px;color:rgba(245,240,232,.8);line-height:1.5}
+
+.alert-box{display:none;background:rgba(192,48,48,.1);border:1px solid rgba(192,48,48,.3);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.alert-box.show{display:block;animation:fadeIn .3s}
+.alert-icon{font-size:12px;color:#E88080;margin-bottom:4px;font-weight:700;letter-spacing:1px}
+.alert-text{font-size:12px;color:rgba(245,240,232,.7);line-height:1.8}
+.alert-text strong{color:#E88080}
+
+.safe-box{display:none;background:rgba(42,128,80,.1);border:1px solid rgba(42,128,80,.3);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.safe-box.show{display:block;animation:fadeIn .3s}
+.safe-icon{font-size:12px;color:#7BC67E;margin-bottom:4px;font-weight:700;letter-spacing:1px}
+.safe-text{font-size:12px;color:rgba(245,240,232,.7);line-height:1.8}
+
+.btn-next{background:#C9A84C;color:#181B39;border:none;border-radius:10px;padding:14px 32px;font-size:14px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;width:100%;letter-spacing:1px;transition:opacity .2s;opacity:.4;pointer-events:none}
+.btn-next.ready{opacity:1;pointer-events:all}
+.btn-next.ready:hover{opacity:.85}
+
+.score-section{display:none;text-align:center;padding:20px 0}
+.score-section.show{display:block;animation:fadeIn .4s}
+.score-circle{width:120px;height:120px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid #C9A84C;position:relative}
+.score-circle::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(201,168,76,.2)}
+.score-num{font-family:'Cormorant Garamond',serif;font-size:42px;color:#C9A84C;font-weight:500;line-height:1}
+.score-label{font-size:10px;color:rgba(245,240,232,.5);letter-spacing:2px;margin-top:2px}
+.score-title{font-size:20px;font-weight:500;color:#f5f0e8;margin-bottom:8px;line-height:1.4}
+.score-desc{font-size:13px;color:rgba(245,240,232,.6);line-height:1.9;margin-bottom:24px}
+
+.alert-items{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;text-align:left}
+.alert-item{background:rgba(192,48,48,.08);border:0.5px solid rgba(192,48,48,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:rgba(245,240,232,.7);line-height:1.6}
+.alert-item strong{color:#E88080;display:block;margin-bottom:2px}
+
+.cta-box{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:12px;padding:24px 20px;text-align:center}
+.cta-title{font-size:15px;font-weight:500;color:#f5f0e8;margin-bottom:8px;line-height:1.5}
+.cta-sub{font-size:12px;color:rgba(245,240,232,.55);line-height:1.8;margin-bottom:16px}
+.cta-features{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cta-feat{font-size:10px;color:#C9A84C;border:0.5px solid rgba(201,168,76,.4);padding:3px 10px;border-radius:10px}
+.cta-btn{background:#C9A84C;color:#181B39;border:none;border-radius:10px;padding:14px 32px;font-size:14px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;letter-spacing:1px;display:inline-block}
+
+.q-counter{font-size:11px;color:rgba(245,240,232,.3);text-align:right;margin-bottom:16px;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-label">JUDGE — PRE-CHECK</div>
+  <div class="h-title">あなたの不動産リスク、<br><span>今すぐ確認してください。</span></div>
+  <div class="h-line"></div>
+  <div class="h-sub">3分・全15問。答えるだけで「気づいていなかったリスク」が見えてきます。</div>
+</header>
+
+<div class="intro-bar">
+  <div class="intro-text">正解・不正解はありません。<strong>直感でお答えください。</strong></div>
+</div>
+
+<main>
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="q-counter" id="qCounter">1 / 15</div>
+
+  <!-- ===== Q1 ===== -->
+  <div class="q-block active" id="q1">
+    <div class="q-header">
+      <div class="q-num">Q 01 ｜ 名義・登記</div>
+      <div class="q-text">自分や家族が関係する不動産（実家・投資物件・所有地など）の登記名義を、最近確認しましたか？</div>
+      <div class="q-sub">法務局で1通600円で確認できます</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">1年以内に確認した</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">数年前に確認した</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">確認したことがない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">確認の方法を知らない</div></div>
+    </div>
+    <div class="alert-box" id="q1-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">名義が古いまま放置されている不動産は、相続発生後に手続きが数年単位で止まる原因になります。<strong>2024年4月から相続登記は義務化。3年以内に登記しないと10万円以下の過料の対象になります。</strong>（出典：法務省）</div>
+    </div>
+    <div class="safe-box" id="q1-safe">
+      <div class="safe-icon">✔ 確認済み</div>
+      <div class="safe-text">定期的な確認は最も重要な防衛策です。ただし名義の確認だけでなく「整理の方針」も決まっていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(2)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q2 ===== -->
+  <div class="q-block" id="q2">
+    <div class="q-header">
+      <div class="q-num">Q 02 ｜ 相続・家族</div>
+      <div class="q-text">相続が発生した場合、誰が相続人になるか正確に把握していますか？</div>
+      <div class="q-sub">配偶者・子・兄弟姉妹・代襲相続人など</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">全員把握している</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">だいたい把握している</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">あまり把握していない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">考えたことがなかった</div></div>
+    </div>
+    <div class="alert-box" id="q2-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">相続人が複数いる場合、<strong>全員の合意がなければ不動産は一切動かせません。</strong>1人でも反対・認知症・行方不明になった瞬間に全てが止まります。遺産分割調停は年間約1.9万件。（出典：最高裁判所 2022年）</div>
+    </div>
+    <div class="safe-box" id="q2-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">相続人の把握は第一歩です。全員と「不動産をどうするか」について話し合いはできていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(3)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q3 ===== -->
+  <div class="q-block" id="q3">
+    <div class="q-header">
+      <div class="q-num">Q 03 ｜ 認知症リスク</div>
+      <div class="q-text">家族（親・配偶者・自分）が認知症と診断された場合、その人名義の不動産がどうなるか知っていますか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">詳しく知っている</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">なんとなく知っている</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">知らない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">考えたことがなかった</div></div>
+    </div>
+    <div class="alert-box" id="q3-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">認知症と診断された瞬間、本人名義の不動産は<strong>家族でも売却・賃貸・担保設定ができなくなります。</strong>（民法3条の2）2025年推計で認知症患者は700万人超・65歳以上の5人に1人。準備は元気なうちにしかできません。（出典：厚生労働省）</div>
+    </div>
+    <div class="safe-box" id="q3-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">認知症リスクを知っていることは大切です。家族信託・成年後見の準備は進んでいますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(4)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q4 ===== -->
+  <div class="q-block" id="q4">
+    <div class="q-header">
+      <div class="q-num">Q 04 ｜ 空き家リスク</div>
+      <div class="q-text">所有・相続予定の不動産が「空き家」になった場合、固定資産税がどう変わるか知っていますか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">知っている</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">なんとなく知っている</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">知らない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">空き家になるとは思っていない</div></div>
+    </div>
+    <div class="alert-box" id="q4-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">管理不全空き家に認定されると固定資産税の軽減措置が外れ<strong>税額が最大6倍になることがあります。</strong>全国の空き家は約900万戸・7〜8軒に1軒が空き家の時代です。「自分には関係ない」が最も危険な思い込みです。（出典：総務省 2023年・国土交通省）</div>
+    </div>
+    <div class="safe-box" id="q4-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">空き家リスクを把握していることは大切です。対策（売却・賃貸・解体・信託）の方針は決まっていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(5)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q5 ===== -->
+  <div class="q-block" id="q5">
+    <div class="q-header">
+      <div class="q-num">Q 05 ｜ 不動産売却</div>
+      <div class="q-text">不動産の売却を検討したとき、査定を依頼した不動産会社が「囲い込み」を行う可能性があることを知っていますか？</div>
+      <div class="q-sub">囲い込み：他社への情報公開を意図的に遅らせて両手仲介を狙う行為</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">知っていて対策している</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">聞いたことはある</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">知らなかった</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">売却を検討したことがない</div></div>
+    </div>
+    <div class="alert-box" id="q5-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">囲い込みが行われると売主は本来より<strong>低い価格で売ることになる可能性があります。</strong>2025年1月から宅建業法改正で処分対象になりましたが、被害は続いています。売却前の中立な専門家への相談が最大の防衛策です。（出典：国土交通省）</div>
+    </div>
+    <div class="safe-box" id="q5-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">囲い込みを知っていることは重要です。売却前に中立な立場で査定額の妥当性を確認できる場所はありますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(6)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q6 ===== -->
+  <div class="q-block" id="q6">
+    <div class="q-header">
+      <div class="q-num">Q 06 ｜ 不動産購入</div>
+      <div class="q-text">不動産購入の際、重要事項説明書の内容を全て理解した上で契約しましたか（または自信がありますか）？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">全て理解している</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">だいたい理解している</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">よくわからないまま契約した</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">購入を検討しているが不安がある</div></div>
+    </div>
+    <div class="alert-box" id="q6-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">重要事項説明の見落としは<strong>契約後に気づいても取り消せないケースがほとんどです。</strong>再建築不可・旧耐震・土壌汚染・管理費滞納——これらは契約後に発覚すると大きな損失につながります。サインの前に第三者の確認を。（出典：宅建業法・国土交通省）</div>
+    </div>
+    <div class="safe-box" id="q6-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">重要事項の理解は大切です。将来の売却・相続時のことも含めて整理はできていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(7)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q7 ===== -->
+  <div class="q-block" id="q7">
+    <div class="q-header">
+      <div class="q-num">Q 07 ｜ 不動産投資</div>
+      <div class="q-text">投資用不動産を保有・検討している場合、その物件の「実際の利回り」を正確に計算できていますか？</div>
+      <div class="q-sub">表面利回りではなく実質利回り（管理費・修繕費・空室リスク・税金を含む）</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">実質利回りで計算できている</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">表面利回りしか把握していない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">よくわからない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">業者の資料をそのまま信じている</div></div>
+    </div>
+    <div class="alert-box" id="q7-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">業者が提示する「表面利回り」は実態と大きく乖離するケースがあります。<strong>空室・修繕・管理費・税金を含めた実質利回りが把握できていない投資は危険です。</strong>満室偽装・書類改ざんなどの詐欺被害も後を絶ちません。中立な視点での確認が不可欠です。</div>
+    </div>
+    <div class="safe-box" id="q7-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">実質利回りを把握していることは重要です。出口戦略（売却・相続・共有解消）まで含めた全体設計はできていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(8)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q8 ===== -->
+  <div class="q-block" id="q8">
+    <div class="q-header">
+      <div class="q-num">Q 08 ｜ 共有名義</div>
+      <div class="q-text">共有名義の不動産を売却・賃貸・建て替えするには何が必要か知っていますか？</div>
+      <div class="q-sub">相続で「とりあえず共有」にした不動産がある方も対象です</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">知っていて対策している</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">なんとなく知っている</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">知らない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">共有名義の不動産がある</div></div>
+    </div>
+    <div class="alert-box" id="q8-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">共有名義の不動産を動かすには<strong>共有者全員の同意が必要です。</strong>（民法）1人でも反対・認知症・行方不明になった瞬間に何もできなくなります。さらに相続のたびに権利者が増え続け、放置するほど解決が難しくなります。（出典：法務省）</div>
+    </div>
+    <div class="safe-box" id="q8-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">共有名義のリスクを把握していることは重要です。共有解消の具体的な方針・タイムラインは決まっていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(9)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q9 ===== -->
+  <div class="q-block" id="q9">
+    <div class="q-header">
+      <div class="q-num">Q 09 ｜ 詐欺・トラブル</div>
+      <div class="q-text">不動産取引で「今すぐ決断してください」「今だけ特別価格です」と言われたとき、冷静に断れる自信がありますか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">自信がある・断れる</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">たぶん断れると思う</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">その場だと断りにくいかもしれない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">信頼できる人からだと断りにくい</div></div>
+    </div>
+    <div class="alert-box" id="q9-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">「急かす」「今だけ」は詐欺の最も典型的なサインです。<strong>信頼している人・大手の社員からの勧誘でも詐欺被害は起きています。</strong>2024年に発覚した住宅ローン詐欺では120人・約34億円の被害が出ています。第三者への相談が唯一の防衛策です。（出典：警察庁・各報道機関）</div>
+    </div>
+    <div class="safe-box" id="q9-safe">
+      <div class="safe-icon">✔ 対策済み</div>
+      <div class="safe-text">判断力があることは大切です。それでも「誰かに確認する仕組み」を持っておくとさらに安心です。</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(10)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q10 ===== -->
+  <div class="q-block" id="q10">
+    <div class="q-header">
+      <div class="q-num">Q 10 ｜ 無料相談の裏側</div>
+      <div class="q-text">不動産会社や銀行の「無料相談」がなぜ無料なのか、その収益構造を知っていますか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">知っていて割り引いて聞いている</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">なんとなく想像はつく</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">知らなかった</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">無料なら中立だと思っていた</div></div>
+    </div>
+    <div class="alert-box" id="q10-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">無料相談の裏には<strong>必ず誰かが儲かる仕組みがあります。</strong>紹介料・売却手数料・保険販売——あなたの相談が誰かの売上になっています。「売らない・紹介料ゼロ・完全中立」の相談窓口は日本にほとんど存在しません。</div>
+    </div>
+    <div class="safe-box" id="q10-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">無料相談の構造を知っていることは大切です。完全中立の立場で確認できる場所は確保できていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(11)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q11 ===== -->
+  <div class="q-block" id="q11">
+    <div class="q-header">
+      <div class="q-num">Q 11 ｜ 相続税</div>
+      <div class="q-text">相続が発生した場合、相続税の申告期限を知っていますか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">知っている（10ヶ月以内）</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">期限があることは知っている</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">知らなかった</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">相続税がかかるとは思っていない</div></div>
+    </div>
+    <div class="alert-box" id="q11-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">相続税の申告・納付期限は<strong>相続を知った日の翌日から10ヶ月以内。</strong>期限を過ぎると延滞税・無申告加算税が課される可能性があります。さらに相続放棄は3ヶ月・準確定申告は4ヶ月・相続登記は3年以内と複数の期限が同時に進行します。（出典：国税庁・法務省）</div>
+    </div>
+    <div class="safe-box" id="q11-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">期限を把握していることは重要です。税理士・司法書士との連携体制はできていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(12)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q12 ===== -->
+  <div class="q-block" id="q12">
+    <div class="q-header">
+      <div class="q-num">Q 12 ｜ 遺言書</div>
+      <div class="q-text">自分または家族（親・配偶者）の遺言書の有無を確認・準備していますか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">確認・準備できている</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">話し合ったことはある</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">確認・準備していない</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">必要だと思っていなかった</div></div>
+    </div>
+    <div class="alert-box" id="q12-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">遺言書がない場合、相続人全員の合意が必要な遺産分割協議が必要です。<strong>1人でも反対・認知症なら協議が止まります。</strong>「うちは仲がいいから大丈夫」と思っていた家族が調停に進むケースが年間約1.9万件あります。（出典：最高裁判所）</div>
+    </div>
+    <div class="safe-box" id="q12-safe">
+      <div class="safe-icon">✔ 準備済み</div>
+      <div class="safe-text">遺言書の準備は最大の相続トラブル防止策です。不動産の分割方法まで明記されていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(13)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q13 ===== -->
+  <div class="q-block" id="q13">
+    <div class="q-header">
+      <div class="q-num">Q 13 ｜ サブリース・管理</div>
+      <div class="q-text">賃貸物件を保有している場合、管理委託契約やサブリース契約の内容を全て把握していますか？</div>
+      <div class="q-sub">賃貸物件がない方は「該当なし」をお選びください</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">全て把握している</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">だいたい把握している</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">管理会社に任せきりで把握していない</div></div>
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">該当なし</div></div>
+    </div>
+    <div class="alert-box" id="q13-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">管理会社に任せきりにしていると<strong>家賃の着服・一方的な賃料減額・解約時の高額違約金</strong>などのトラブルに巻き込まれるリスクがあります。サブリース契約の相談は国土交通省に毎年数千件寄せられています。（出典：国土交通省）</div>
+    </div>
+    <div class="safe-box" id="q13-safe">
+      <div class="safe-icon">✔ 把握済み</div>
+      <div class="safe-text">契約内容の把握は重要です。定期的な見直しと第三者による確認はできていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(14)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q14 ===== -->
+  <div class="q-block" id="q14">
+    <div class="q-header">
+      <div class="q-num">Q 14 ｜ 意思決定</div>
+      <div class="q-text">不動産に関する重要な決断（売る・買う・相続・投資）を、誰か中立な専門家に相談してから行いましたか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">中立な専門家に相談してから決めた</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">業者や身内に相談した程度</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">相談せずに自分で決めた</div></div>
+      <div class="opt" onclick="select(this,'alert')"><div class="opt-mark"></div><div class="opt-text">中立な専門家の存在を知らなかった</div></div>
+    </div>
+    <div class="alert-box" id="q14-alert">
+      <div class="alert-icon">⚠ 要注意</div>
+      <div class="alert-text">不動産業者・銀行・士業は<strong>それぞれ自社の利益に最適化されたアドバイスをします。</strong>「中立な専門家」に相談できる窓口は日本にほとんど存在しないのが現状です。売らない・紹介料ゼロ・完全中立の判断支援がJUDGEの役割です。</div>
+    </div>
+    <div class="safe-box" id="q14-safe">
+      <div class="safe-icon">✔ 対策済み</div>
+      <div class="safe-text">中立な専門家への相談は最大の防衛策です。次の決断にも同じ体制で臨めていますか？</div>
+    </div>
+    <button class="btn-next" onclick="nextQ(15)">次の質問へ</button>
+  </div>
+
+  <!-- ===== Q15 ===== -->
+  <div class="q-block" id="q15">
+    <div class="q-header">
+      <div class="q-num">Q 15 ｜ 今この瞬間</div>
+      <div class="q-text">このアンケートを受けて、「自分は今すぐ何かを確認・整理しないといけないかもしれない」と感じましたか？</div>
+    </div>
+    <div class="options">
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">はい、かなり感じた</div></div>
+      <div class="opt" onclick="select(this,'safe')"><div class="opt-mark"></div><div class="opt-text">少し感じた</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">あまり感じなかった</div></div>
+      <div class="opt" onclick="select(this,'warn')"><div class="opt-mark"></div><div class="opt-text">問題ないと思っている</div></div>
+    </div>
+    <div class="alert-box" id="q15-alert" style="display:none"></div>
+    <div class="safe-box" id="q15-safe" style="display:none"></div>
+    <button class="btn-next" onclick="showResult()">結果を見る</button>
+  </div>
+
+  <!-- ===== 結果 ===== -->
+  <div class="q-block" id="result">
+    <div class="score-section show">
+      <div class="score-circle">
+        <div class="score-num" id="scoreNum">0</div>
+        <div class="score-label">リスク項目</div>
+      </div>
+      <div class="score-title" id="scoreTitle"></div>
+      <div class="score-desc" id="scoreDesc"></div>
+      <div class="alert-items" id="alertItems"></div>
+      <div class="cta-box">
+        <div class="cta-title">不動産の答えは、あなたが出す。<br>でも整理する場所が必要です。</div>
+        <div class="cta-sub">
+          売らない・紹介料ゼロ・完全中立<br>
+          不動産会社から完全独立した<br>
+          セカンドオピニオン専門家がいます。
+        </div>
+        <div class="cta-features">
+          <span class="cta-feat">宅建士</span>
+          <span class="cta-feat">FP2級</span>
+          <span class="cta-feat">相続診断士</span>
+          <span class="cta-feat">22業種パートナー</span>
+        </div>
+        <button class="cta-btn" onclick="window.open('https://lin.ee/NNuWOQW','_blank')">JUDGEのLINEに相談する</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let answers = {};
+let alertCount = 0;
+let alertMessages = [];
+
+const alertMsgs = {
+  1:'名義・登記の未確認',
+  2:'相続人の未把握',
+  3:'認知症リスクへの無対策',
+  4:'空き家リスクの未把握',
+  5:'囲い込みリスクの未把握',
+  6:'重要事項説明の未理解',
+  7:'実質利回りの未計算',
+  8:'共有名義リスクの未把握',
+  9:'詐欺・急かしへの脆弱性',
+  10:'無料相談の構造の未理解',
+  11:'相続税申告期限の未把握',
+  12:'遺言書の未準備',
+  13:'管理委託の把握不足',
+  14:'中立専門家への未相談',
+  15:''
+};
+
+function select(el, level){
+  const parent = el.closest('.q-block');
+  parent.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  const qNum = parseInt(parent.id.replace('q',''));
+  answers[qNum] = level;
+
+  const alertBox = document.getElementById('q'+qNum+'-alert');
+  const safeBox = document.getElementById('q'+qNum+'-safe');
+  if(alertBox) alertBox.classList.toggle('show', level==='alert');
+  if(safeBox) safeBox.classList.toggle('show', level==='safe'||level==='warn');
+
+  const btn = parent.querySelector('.btn-next');
+  btn.classList.add('ready');
+}
+
+function nextQ(num){
+  const cur = document.querySelector('.q-block.active');
+  cur.classList.remove('active');
+  document.getElementById('q'+num).classList.add('active');
+  const prog = (num-1)/15*100;
+  document.getElementById('progressBar').style.width = prog+'%';
+  document.getElementById('qCounter').textContent = num+' / 15';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResult(){
+  alertCount = 0;
+  alertMessages = [];
+  for(let i=1;i<=14;i++){
+    if(answers[i]==='alert'){
+      alertCount++;
+      if(alertMsgs[i]) alertMessages.push(alertMsgs[i]);
+    }
+  }
+
+  const cur = document.querySelector('.q-block.active');
+  cur.classList.remove('active');
+  document.getElementById('result').classList.add('active');
+  document.getElementById('progressBar').style.width='100%';
+  document.getElementById('qCounter').textContent='結果';
+
+  document.getElementById('scoreNum').textContent = alertCount;
+
+  let title, desc;
+  if(alertCount <= 2){
+    title = '比較的リスクは低い状態です。';
+    desc = 'ただし不動産・相続の問題は「突然」やってきます。把握できていない部分を今のうちに整理しておくことで、将来の選択肢が大きく広がります。';
+  } else if(alertCount <= 6){
+    title = 'いくつかのリスクが潜んでいます。';
+    desc = '「まだ大丈夫」と思っていた部分にリスクが見えてきました。放置するほど選択肢が減ります。今が動くべきタイミングです。';
+  } else if(alertCount <= 10){
+    title = '複数の重大なリスクがあります。';
+    desc = '多くの項目でリスクが確認されました。不動産・相続の問題は複合的に絡み合うため、全体像を整理することが急務です。';
+  } else {
+    title = '今すぐ整理が必要な状態です。';
+    desc = 'ほとんどの項目でリスクが確認されました。問題が起きてからでは選択肢が大幅に減ります。今すぐ動き始めることをお勧めします。';
+  }
+
+  document.getElementById('scoreTitle').textContent = title;
+  document.getElementById('scoreDesc').textContent = desc;
+
+  const container = document.getElementById('alertItems');
+  if(alertMessages.length > 0){
+    container.innerHTML = '<div style="font-size:11px;letter-spacing:2px;color:#E88080;margin-bottom:8px;font-weight:500">確認が必要な項目</div>';
+    alertMessages.forEach(msg=>{
+      const div = document.createElement('div');
+      div.className='alert-item';
+      div.innerHTML='<strong>⚠ '+msg+'</strong>';
+      container.appendChild(div);
+    });
+  }
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
